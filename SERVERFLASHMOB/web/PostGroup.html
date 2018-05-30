@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>GroupRegisry-PostGroup</title>
+
+<script src="httputilities.js"></script>
+<script src="group.js"></script>
+<script src="error_codes.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/core.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<script src="/build/jquery.datetimepicker.full.min.js"></script>
+<link rel="stylesheet" type="text/css" href="jquery.datetimepicker.css"/>
+<script src="php-date-formatter.js"></script>
+<script src="php-date-formatter.min.js"></script>
+<script src="jquery.datetimepicker.js"></script>
+
+<script>
+
+function customError(code, payload){
+	if (code==INVALID_GROUP_CODE){
+		var msg = JSON.parse(payload).detailMessage;
+		alert("Error: " + code + " - " + msg);
+		return true;
+	}
+	if (code==INVALID_DATE_CODE){
+		var msg = JSON.parse(payload).detailMessage;
+		alert("Error: " + code + " - " + msg);
+		return true;
+	}
+	return false;
+}
+
+function callback(response){	
+	alert(response);	
+}
+
+//var dateFormat = require('dateFormat');
+
+
+
+function fAdd(){	
+	/*
+	if (document.getElementById('startDate').value == ""){
+		alert("Error: Not insered field");
+	}*/
+	
+	var group = new Group(document.getElementById('title').value, document.getElementById('description').value, document.getElementById('startDate').value, document.getElementById('endDate').value);
+	var theUri = 'http://localhost:8182/groupsRegApplication/groups';
+	var payload = JSON.stringify(group);
+	httpAsyncOperation(theUri,"POST", payload, callback);
+}
+
+$(document).ready(function(){	
+	
+			
+				 jQuery("#startDate").datetimepicker({
+					 format:'Y-m-d_H:i',
+					 step:5,
+					 validateOnBlur:false,
+					
+					 //inline:true,
+					  lang:'it',
+					 
+				  onShow:function( ct ){
+				   this.setOptions({
+				    maxDate:jQuery("#endDate").val()?jQuery("#endDate").val():false
+				   })
+				  },
+				  
+				 });
+				 jQuery("#endDate").datetimepicker({
+					 format:'Y-m-d_H:i',
+					 step:5,
+					 validateOnBlur:false,
+					 //inline:true,
+					  lang:'ru',
+				  onShow:function( ct ){
+				   this.setOptions({
+				    minDate:jQuery("#startDate").val()?jQuery("#startDate").val():false
+				   })
+				  },
+				  
+				 });
+				
+			
+			
+});
+
+
+
+
+</script>
+
+</head>
+<body>
+
+<p>
+Test client for Group Registry services - Add a Group
+</p>
+<form name="groupRegistry">
+
+Title: 
+<input type="text" id="title" value="">
+<br>
+
+Description: 
+<input type="text" id="description" value="">
+<br>
+
+startDate: 
+<input type="text" id="startDate" value="">
+<br>
+
+endDate: 
+<input type="text" id="endDate" value="">
+<br>
+
+
+<button type="button"
+onclick="fAdd()">
+ADD</button>
+
+</form>
+
+<p id="demo"></p>
+
+
+
+</body>
+</html>

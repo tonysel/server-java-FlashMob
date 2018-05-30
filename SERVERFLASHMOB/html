@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>GroupRegisry-PostGroup</title>
+
+<script src="httputilities.js"></script>
+<script src="group.js"></script>
+<script src="error_codes.js"></script>
+
+<link rel="stylesheet" type="text/css" media="screen" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+        <!--  link href="./css/prettify-1.0.css" rel="stylesheet">
+        <link href="./css/base.css" rel="stylesheet"-->
+        <link href="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/build/css/bootstrap-datetimepicker.css" rel="stylesheet">
+
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+		<script type="text/javascript" src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+		<script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+			<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js"></script>
+
+			<script src="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/src/js/bootstrap-datetimepicker.js"></script>
+
+
+
+<style>
+	.input {
+max-width:50px;
+	}
+</style>
+
+<script>
+
+function customError(code, payload){
+	if (code==INVALID_GROUP_CODE){
+		var msg = JSON.parse(payload).detailMessage;
+		alert("Error: " + code + " - " + msg);
+		return true;
+	}
+	if (code==INVALID_DATE_CODE){
+		var msg = JSON.parse(payload).detailMessage;
+		alert("Error: " + code + " - " + msg);
+		return true;
+	}
+	return false;
+}
+
+function callback(response){	
+	alert(response);	
+}
+
+//var dateFormat = require('dateFormat');
+
+
+function fAdd(){	
+	var group = new Group(document.getElementById('title').value, document.getElementById('description').value, document.getElementById('startDate').value, document.getElementById('endDate').value);
+	var theUri = 'http://localhost:8182/groupsRegApplication/groups';
+	var payload = JSON.stringify(group);
+	httpAsyncOperation(theUri,"POST", payload, callback);
+}
+
+$(document).ready(function(){	
+	$("#startDate").datetimepicker(
+			/*{
+				  format:'Y-m-d_H:i',
+				
+				  lang:'it'
+				}*/
+				{
+					  format:'YYYY-MM-DD_HH:mm',
+					}
+			)
+	
+	$("#endDate").datetimepicker(
+			{
+				  format:'YYYY-MM-DD_HH:mm',
+				}
+			)
+})
+
+</script>
+
+</head>
+<body>
+
+<p>
+Test client for Group Registry services - Add a Group
+</p>
+<form name="groupRegistry">
+
+Title: 
+<input type="text" id="title" value="">
+<br>
+
+Description: 
+<input type="text" id="description" value="">
+<br>
+
+startDate: 
+<div class='input-group date' id='startDate'>
+                    <input type='text'  />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+<br>
+
+endDate: 
+<div class='input-group date' id='endDate'>
+                    <input type='text' class="form-control" />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+<br>
+
+
+<button type="button"
+onclick="fAdd()">
+ADD</button>
+
+</form>
+
+<p id="demo"></p>
+
+
+
+</body>
+</html>
